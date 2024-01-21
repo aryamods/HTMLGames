@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman</title>
+    <style>
+        /* CSS styles for hangman */
+#hangman {
+    text-align: center;
+    margin-top: 50px;
+}
+
+p {
+    font-size: 20px;
+}
+
+input, button {
+    font-size: 18px;
+    margin: 5px;
+    padding: 10px;
+}
+
+button {
+    cursor: pointer;
+}
+    </style>
+</head>
+<body>
+    <div id="hangman">
+        <p id="wordDisplay"></p>
+        <p>Incorrect Guesses: <span id="incorrectGuesses"></span></p>
+        <p id="result"></p>
+        <input type="text" id="userGuess" placeholder="Enter a letter">
+        <button onclick="makeGuess()">Submit Guess</button>
+        <button onclick="startGame()">New Game</button>
+    </div>
+
+<script>
+    const words = ['javascript', 'hangman', 'programming', 'developer', 'coding'];
+    let secretWord = '';
+    let guessedWord = [];
+    let incorrectGuesses = [];
+    let maxIncorrectGuesses = 6;
+
+    function startGame() {
+        secretWord = words[Math.floor(Math.random() * words.length)];
+        guessedWord = new Array(secretWord.length).fill('_');
+        incorrectGuesses = [];
+        updateDisplay();
+    }
+
+    function makeGuess() {
+        const userGuessInput = document.getElementById('userGuess');
+        const userGuess = userGuessInput.value.toLowerCase();
+
+        if (!userGuess.match(/^[a-z]$/) || guessedWord.includes(userGuess) || incorrectGuesses.includes(userGuess)) {
+            return;
+        }
+
+        if (secretWord.includes(userGuess)) {
+            secretWord.split('').forEach((letter, index) => {
+                if (letter === userGuess) {
+                    guessedWord[index] = userGuess;
+                }
+            });
+        } else {
+            incorrectGuesses.push(userGuess);
+        }
+
+        updateDisplay();
+        checkGameStatus();
+
+        userGuessInput.value = '';
+    }
+
+    function updateDisplay() {
+        document.getElementById('wordDisplay').textContent = guessedWord.join(' ');
+        document.getElementById('incorrectGuesses').textContent = incorrectGuesses.join(', ');
+    }
+
+    function checkGameStatus() {
+        if (guessedWord.join('') === secretWord) {
+            document.getElementById('result').textContent = 'Congratulations! You guessed the word.';
+        } else if (incorrectGuesses.length >= maxIncorrectGuesses) {
+            document.getElementById('result').textContent = `Sorry, you ran out of attempts. The word was "${secretWord}".`;
+        }
+    }
+
+    startGame();
+</script>
