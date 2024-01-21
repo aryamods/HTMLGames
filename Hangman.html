@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman - Chase Fate</title>
+    <style>
+        /* CSS styles for hangman */
+#hangman {
+    text-align: center;
+    margin-top: 50px;
+}
+
+p {
+    font-size: 20px;
+}
+
+input, button {
+    font-size: 18px;
+    margin: 5px;
+    padding: 10px;
+}
+
+button {
+    cursor: pointer;
+}
+    </style>
+</head>
+<body>
+<center>
+  <h4>Selamat datang di permainan Hangman!</h4>
+    <div id="hangman">
+        <p id="wordDisplay"></p>
+        <p>Tebakan Salah: <span id="incorrectGuesses"></span></p>
+        <p id="result"></p>
+        <input type="text" id="userGuess" placeholder="Enter a letter">
+        <button onclick="makeGuess()">Kirim Tebak</button>
+        <button onclick="startGame()">Permainan Baru</button>
+    </div>
+</center>
+
+<script>
+    const words = ["python", "html", "php", "java", "javascript", "ruby", "Swift", "bash", "perl"];
+    let secretWord = '';
+    let guessedWord = [];
+    let incorrectGuesses = [];
+    let maxIncorrectGuesses = 6;
+
+    function startGame() {
+        secretWord = words[Math.floor(Math.random() * words.length)];
+        guessedWord = new Array(secretWord.length).fill('_');
+        incorrectGuesses = [];
+        updateDisplay();
+    }
+
+    function makeGuess() {
+        const userGuessInput = document.getElementById('userGuess');
+        const userGuess = userGuessInput.value.toLowerCase();
+
+        if (!userGuess.match(/^[a-z]$/) || guessedWord.includes(userGuess) || incorrectGuesses.includes(userGuess)) {
+            return;
+        }
+
+        if (secretWord.includes(userGuess)) {
+            secretWord.split('').forEach((letter, index) => {
+                if (letter === userGuess) {
+                    guessedWord[index] = userGuess;
+                }
+            });
+        } else {
+            incorrectGuesses.push(userGuess);
+        }
+
+        updateDisplay();
+        checkGameStatus();
+
+        userGuessInput.value = '';
+    }
+
+    function updateDisplay() {
+        document.getElementById('wordDisplay').textContent = guessedWord.join(' ');
+        document.getElementById('incorrectGuesses').textContent = incorrectGuesses.join(', ');
+    }
+
+    function checkGameStatus() {
+        if (guessedWord.join('') === secretWord) {
+            document.getElementById('result').textContent = 'Selamat! Anda menebak kata itu.';
+        } else if (incorrectGuesses.length >= maxIncorrectGuesses) {
+            document.getElementById('result').textContent = `Maaf, Anda kehabisan upaya. Kata itu adalah "${secretWord}".`;
+        }
+    }
+
+    startGame();
+</script>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batu Gunting Kertas - Chase Fate</title>
+    <style>
+        /* CSS styles for Batu-Gunting-Kertas */
+        #game {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        button {
+            font-size: 18px;
+            margin: 5px;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<center>
+  <h4>Selamat datang di permainan Batu-Gunting-Kertas!</h4>
+    <div id="game">
+        <button onclick="playGame('Batu')">Batu</button>
+        <button onclick="playGame('Gunting')">Gunting</button>
+        <button onclick="playGame('Kertas')">Kertas</button>
+        <p id="result"></p>
+    </div>
+</center>
+    <script>
+        function playGame(userChoice) {
+            const choices = ['Batu', 'Gunting', 'Kertas'];
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+            const resultMessage = document.getElementById('result');
+
+            if (userChoice === computerChoice) {
+                resultMessage.textContent = 'Kamu Seri!';
+            } else if (
+                (userChoice === 'Batu' && computerChoice === 'Kertas') ||
+                (userChoice === 'Gunting' && computerChoice === 'Batu') ||
+                (userChoice === 'Kertas' && computerChoice === 'Gunting')
+            ) {
+                resultMessage.textContent = 'Kamu Menang!';
+            } else {
+                resultMessage.textContent = 'Kamu Kalah!';
+            }
+        }
+    </script>
+</body>
+</html>
